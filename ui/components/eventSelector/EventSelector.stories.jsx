@@ -1,6 +1,6 @@
 import React from 'react';
 import EventSelector from './EventSelector';
-import { GlobalStyle } from '../../utils';
+import { GlobalStyle } from '../../theme';
 
 export default {
   component: EventSelector,

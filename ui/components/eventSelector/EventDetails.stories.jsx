@@ -1,6 +1,6 @@
 import React from 'react';
 import EventDetails from './EventDetails';
-import { GlobalStyle } from '../../utils';
+import { GlobalStyle } from '../../theme';
 
 export default {
   component: EventDetails,
