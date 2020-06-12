@@ -41,6 +41,10 @@ export const GlobalStyle = props => (
         font-size: ${typeScale.header5};
       }
 
+      strong {
+        padding: 0 0.1rem;
+      }
+
       label {
         font-size: ${typeScale.paragraph};
         font-weight: bold;

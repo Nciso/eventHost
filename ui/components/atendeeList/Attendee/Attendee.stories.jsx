@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 //  import { action } from '@storybook/addon-actions';
 import Attendee from './Attendee';
-import { GlobalStyle } from '../../theme';
+import { GlobalStyle } from '../../../theme';
 import { css } from 'emotion';
 
 export default {

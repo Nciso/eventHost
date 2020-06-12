@@ -15,7 +15,7 @@ export const red = {
 export const orange = {
   100: '#DD6B20',
 };
-// TODO: CHECK this shade #E9DFFC
+
 export const neutral = {
   100: '#fff',
   200: '#f2f2f2',

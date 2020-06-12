@@ -4,20 +4,22 @@ import { css } from 'emotion';
 
 const EventDetails = ({
   totalPeople = 0,
-  totalChekedIn = 0,
+  totalCheckedIn = 0,
   companyArray = [],
 }) => {
-  const peopleLeft = totalPeople - totalChekedIn;
+  const peopleLeft = totalPeople - totalCheckedIn;
   return (
     <div
       className={css`
         text-align: left;
+        padding: 1rem;
         @media (min-width: 420px) {
           width: 30rem;
+          padding: 0;
         }
       `}
     >
-      <p>People in the event right now: {totalChekedIn}</p>
+      <p>People in the event right now: {totalCheckedIn}</p>
       <p>
         People by company in the event right now:
         {companyArray
@@ -29,10 +31,9 @@ const EventDetails = ({
   );
 };
 
-// eslint-disable-next-line react/no-typos
-EventDetails.PropTypes = {
-  totalPeople: PropTypes.number.isRequired,
-  totalChekedIn: PropTypes.number.isRequired,
+EventDetails.propTypes = {
+  totalPeople: PropTypes.number,
+  totalCheckedIn: PropTypes.number,
   companyArray: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,

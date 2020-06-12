@@ -7,44 +7,50 @@ import { css } from 'emotion';
 Select is just a styled component, has no state and is not shareable to other
 components
 */
-const Select = ({ events = [], selectEvent }) => (
-  <div
-    className={css`
-      display: flex;
-      flex-direction: column;
-      @media (min-width: 420px) {
-        display: block;
-      }
-    `}
-  >
-    <label htmlFor="event_select">Select Event:</label>
-    <select
-      id="event_select"
-      onChange={e => {
-        selectEvent(e.target.value);
-      }}
+const Select = ({ events = [], selectEvent }) => {
+  const changeValue = e => {
+    selectEvent(e.target.value);
+  };
+  /*
+  e => {
+          console.log(e);
+          selectEvent(e.target.value);
+        } */
+  return (
+    <div
       className={css`
-        width: 15rem;
-        height: 3rem;
-        margin-left: 0;
-        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
         @media (min-width: 420px) {
-          margin-left: 1rem;
+          display: block;
         }
       `}
     >
-      <option>Select an event</option>
-      {events.map(({ name, _id }) => (
-        <option key={_id} value={_id}>
-          {name}
-        </option>
-      ))}
-    </select>
-  </div>
-);
+      <label htmlFor="event_select">Select Event:</label>
+      <select
+        onChange={changeValue}
+        className={css`
+          width: 15rem;
+          height: 3rem;
+          margin-left: 0;
+          border-radius: 5px;
+          @media (min-width: 420px) {
+            margin-left: 1rem;
+          }
+        `}
+      >
+        <option>Select an event</option>
+        {events.map(({ name, _id }, i) => (
+          <option key={_id} value={i}>
+            {name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
 
-// eslint-disable-next-line react/no-typos
-Select.PropTypes = {
+Select.propTypes = {
   events: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -53,13 +59,12 @@ Select.PropTypes = {
   ),
 };
 
-const EventSelector = ({ events = [] }) => {
-  const eventNames = events.map(({ name = '', _id = '' }) => ({ name, _id }));
-  const [currentEvent, setCurrentEvent] = React.useState({});
+const EventSelector = ({ events = [], selectedEvent }) => {
+  const [currentEventIndex, setEventIndex] = React.useState(-1);
 
-  const onSelectEvent = eventId => {
-    const selected = events.find(event => event._id === eventId);
-    setCurrentEvent(selected);
+  const onSelectEvent = eventIndex => {
+    setEventIndex(eventIndex);
+    selectedEvent(events[eventIndex]._id || '');
   };
 
   return (
@@ -76,20 +81,19 @@ const EventSelector = ({ events = [] }) => {
         }
       `} main-background`}
     >
-      <Select events={eventNames} selectEvent={onSelectEvent} />
-      <EventDetails {...currentEvent} />
+      <Select events={events} selectEvent={onSelectEvent} />
+      <EventDetails {...(events[currentEventIndex] || {})} />
     </div>
   );
 };
 
-// eslint-disable-next-line react/no-typos
-EventSelector.PropTypes = {
+EventSelector.propTypes = {
   events: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       _id: PropTypes.string.isRequired,
       totalPeople: PropTypes.number.isRequired,
-      totalChekedIn: PropTypes.number.isRequired,
+      totalChekedIn: PropTypes.number,
       companyArray: PropTypes.arrayOf(
         PropTypes.shape({
           name: PropTypes.string.isRequired,

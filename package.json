@@ -9,7 +9,8 @@
     "pretjsx": "prettier --write \"**/*.jsx\"",
     "quality": "yarn lint && yarn pretjs && yarn pretjsx",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "test:back": "jest --watch --config=jest_back.config.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.6.3",
@@ -19,7 +20,8 @@
     "prettier": "^1.18.2",
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "react-dom": "^16.10.2",
+    "simpl-schema": "^1.7.3"
   },
   "meteor": {
     "mainModule": {
@@ -32,6 +34,7 @@
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
     "@pathable/eslint-config-pathable": "^1.0.19",
+    "@shelf/jest-mongodb": "^1.1.5",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-knobs": "^5.3.19",
     "@storybook/addon-links": "^5.3.19",
@@ -42,6 +45,7 @@
     "babel-eslint": "^8.2.2",
     "babel-loader": "^8.1.0",
     "cypress": "^3.4.1",
-    "eslint": "^4.19.1"
+    "eslint": "^4.19.1",
+    "jest": "^26.0.1"
   }
 }

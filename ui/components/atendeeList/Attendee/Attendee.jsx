@@ -1,21 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { css } from 'emotion';
-import formatDate from '../../utils/formatDate';
-
-const Button = props => (
-  <button
-    className={css`
-      max-width: 12rem;
-      height: 3rem;
-      cursor: pointer;
-    `}
-    {...props}
-  >
-    {props.children}
-  </button>
-);
+import formatDate from '../../../utils/formatDate';
+import { neutral } from '../../../theme';
+import { typeScale } from '../../../theme';
+import Button from './CheckInButton';
 
 const Attendee = ({
+  _id = '',
   firstName = '',
   lastName = '',
   companyName = '',
@@ -25,15 +16,13 @@ const Attendee = ({
   isCheckedIn = false,
   onCheckIn,
 }) => {
-  // this reference is to prevent a call on the mount event in the useEffect hook
-  const didMountRef = useRef(false);
-
   const timerSettings = {
     activeTimer: false,
     currentSecond: 5,
   };
 
   const [timerValues, setTimerValues] = useState(timerSettings);
+
   /**
    * This function shows a timer for allowing the user to check out the user after a check in
    * @name delay
@@ -50,29 +39,32 @@ const Attendee = ({
       setTimerValues({ activeTimer: true, currentSecond: displaySecond });
     }, second * 1000);
   };
-  /*
-    The reason I am disabling this eslint rule is because is easier for debugging
-    having a function name in the useEffect, also is faster than the arrow function 
-    beacuse we are not making an assigment. Lastly maybe this useEffect hook
-    will run multiple times. 
-  */
-  useEffect(
-    // eslint-disable-next-line prefer-arrow-callback
-    function changeStatus() {
-      /*
-        This function will check if the checkInDate prop is changed, every time
-        is changed, it will render the timeout for the 5 seconds.
-        I didn't want to handle this behavior by the component itself because
-        if two people are connected, the reactivity is lost
-      */
-      if (didMountRef.current) {
-        for (let i = 0; i <= 5; i++) {
-          delay(i, timerValues.currentSecond);
-        }
-      } else didMountRef.current = true;
-    },
-    [checkInDate]
-  );
+
+  /**
+   * This function triggers the behavior of the counter of  seconds
+   */
+  function changeStatus() {
+    for (let i = 0; i <= 5; i++) {
+      delay(i, timerValues.currentSecond);
+    }
+    // if (didMountRef.current) {
+    // } else didMountRef.current = true;
+  }
+
+  const dateLabelsStyle = css`
+    color: black;
+    font-size: 1.1rem;
+  `;
+
+  /**
+   * This Function notifies the parent for a click in the principal button
+   */
+  const changeAttendeeStatus = () => {
+    onCheckIn(_id);
+    if (!isCheckedIn) {
+      changeStatus();
+    }
+  };
 
   return (
     <li
@@ -81,8 +73,10 @@ const Attendee = ({
         padding: 1rem;
         flex-direction: column;
         border-radius: 5px;
+        margin-bottom: 30px;
         -webkit-box-shadow: 0px 12px 15px 0px rgba(0, 0, 0, 0.67);
         box-shadow: 0px 12px 15px 0px rgba(0, 0, 0, 0.67);
+        background-color: ${neutral[100]};
         @media (min-width: 420px) {
           flex-direction: row;
         }
@@ -93,10 +87,31 @@ const Attendee = ({
           flex-grow: 3;
         `}
       >
-        <p>
-          Full name: {firstName} {lastName} <span>Title: {title}</span>
+        <p
+          className={css`
+            font-size: ${typeScale.header3};
+          `}
+        >
+          Full name:{' '}
+          <strong>
+            {' '}
+            {firstName} {lastName}
+          </strong>
         </p>
-        <p>Company: {companyName}</p>
+        <p
+          className={css`
+            font-size: ${typeScale.header4};
+          `}
+        >
+          Title: <strong>{title}</strong>
+        </p>
+        <p
+          className={css`
+            font-size: ${typeScale.header4};
+          `}
+        >
+          Company: {companyName}
+        </p>
         <div
           className={css`
             display: flex;
@@ -107,11 +122,11 @@ const Attendee = ({
               flex-grow: 0.5;
             `}
           >
-            <p>Check in date</p>
+            <label className={dateLabelsStyle}>Check-in date</label>
             <p>{formatDate(checkInDate) || 'N/A'}</p>
           </div>
           <div>
-            <p>Check out date</p>
+            <label className={dateLabelsStyle}>Check-out date</label>
             <p>{formatDate(checkOutDate) || 'N/A'}</p>
           </div>
         </div>
@@ -128,7 +143,10 @@ const Attendee = ({
         `}
       >
         {timerValues.activeTimer || (
-          <Button onClick={onCheckIn}>
+          <Button
+            onClick={changeAttendeeStatus}
+            variant={isCheckedIn ? 'warning' : 'primary'}
+          >
             {!isCheckedIn ? 'Check in' : 'Check out'}{' '}
             {`${firstName} ${lastName}`}
           </Button>
